@@ -8,11 +8,7 @@ int64_t alarm_callback(alarm_id_t id, void *user_data) {
     return 0;
 }
 
-
-
-
-int main()
-{
+int main() {
     stdio_init_all();
 
     // Timer example code - This example fires off the callback after 2000ms
