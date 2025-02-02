@@ -1,45 +1,58 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/timer.h"
-#include "hardware/clocks.h"
 
-// Definindo os pinos dos LEDs
+// Definição dos pinos dos LEDs
 #define LED_GREEN 11
 #define LED_BLUE 12
 #define LED_RED 13
 
-// Função para inicializar a GPIO
+// Variável para controlar o estado do semáforo
+int estado = 0;
+
+// Função para inicializar as GPIOs
 void init_gpio() {
-    // Inicializando a GPIO
     gpio_init(LED_GREEN);
     gpio_init(LED_BLUE);
     gpio_init(LED_RED);
 
-    // Configurando os pinos como saída
     gpio_set_dir(LED_GREEN, GPIO_OUT);
     gpio_set_dir(LED_BLUE, GPIO_OUT);
     gpio_set_dir(LED_RED, GPIO_OUT);
 }
 
-int64_t alarm_callback(alarm_id_t id, void *user_data) {
-    // Put your timeout handler code in here
-    return 0;
+// Callback do temporizador - Alterna os LEDs
+bool semaforo_callback(repeating_timer_t *rt) {
+    // Desliga todos os LEDs
+    gpio_put(LED_GREEN, 0);
+    gpio_put(LED_BLUE, 0);
+    gpio_put(LED_RED, 0);
+
+    // Muda o estado do semáforo
+    if (estado == 0) {
+        gpio_put(LED_RED, 1); // Liga o LED vermelho
+    } else if (estado == 1) {
+        gpio_put(LED_RED, 1);
+        gpio_put(LED_GREEN, 1); // Liga o LED amarelo
+    } else if (estado == 2) {
+        gpio_put(LED_GREEN, 1); // Liga o LED verde
+    }
+
+    // Atualiza o estado para a próxima transição
+    estado = (estado + 1) % 3;
+    return true; // Mantém o temporizador ativo
 }
 
 int main() {
     stdio_init_all();
     init_gpio();
 
-    // Timer example code - This example fires off the callback after 2000ms
-    add_alarm_in_ms(2000, alarm_callback, NULL, false);
-    // For more examples of timer use see https://github.com/raspberrypi/pico-examples/tree/master/timer
-
-    printf("System Clock Frequency is %d Hz\n", clock_get_hz(clk_sys));
-    printf("USB Clock Frequency is %d Hz\n", clock_get_hz(clk_usb));
-    // For more examples of clocks use see https://github.com/raspberrypi/pico-examples/tree/master/clocks
+    repeating_timer_t timer;
+    // Adiciona o temporizador para alterar os LEDs a cada 3000ms (3 segundos)
+    add_repeating_timer_ms(3000, semaforo_callback, NULL, &timer);
 
     while (true) {
-        printf("Hello, world!\n");
-        sleep_ms(1000);
+        printf("Semáforo em execução...\n");
+        sleep_ms(1000); // Mensagem a cada 1 segundo
     }
 }
