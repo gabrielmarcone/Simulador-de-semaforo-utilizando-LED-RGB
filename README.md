@@ -48,4 +48,4 @@ Os resistores de **330Ω** devem ser conectados em **série** com cada LED.
 
 Aqui segue o link de um vídeo que ilustra o funcionamento do código na placa e explica brevemente a estrutura do código:
 
-- **[Link para acessar o vídeo]**
+- **[Link para acessar o vídeo](https://drive.google.com/file/d/1Son2VU6c5eq_TOaIi9sblwVr5LAnbV4q/view?usp=drivesdk)**
