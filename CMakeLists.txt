@@ -56,8 +56,6 @@ target_include_directories(Semaforo PRIVATE
 # Add any user requested libraries
 target_link_libraries(Semaforo 
         hardware_timer
-        hardware_clocks
-        
         )
 
 pico_add_extra_outputs(Semaforo)
