@@ -32,8 +32,7 @@ bool semaforo_callback(repeating_timer_t *rt) {
     if (estado == 0) {
         gpio_put(LED_RED, 1); // Liga o LED vermelho
     } else if (estado == 1) {
-        gpio_put(LED_RED, 1);
-        gpio_put(LED_GREEN, 1); // Liga o LED amarelo
+        gpio_put(LED_BLUE, 1); // Liga o LED azul (simboliza o amarelo)
     } else if (estado == 2) {
         gpio_put(LED_GREEN, 1); // Liga o LED verde
     }
@@ -52,7 +51,13 @@ int main() {
     add_repeating_timer_ms(3000, semaforo_callback, NULL, &timer);
 
     while (true) {
-        printf("Semáforo em execução...\n");
-        sleep_ms(1000); // Mensagem a cada 1 segundo
+        sleep_ms(3000); // Espera 3 segundos para indicar a cor no terminal
+        if (estado == 1) {
+            printf("Semáforo: Vermelho\n");
+        } else if (estado == 2) {
+            printf("Semáforo: Amarelo\n");
+        } else if (estado == 0) {
+            printf("Semáforo: Verde\n");
+        }
     }
 }
