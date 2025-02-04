@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/timer.h"
+#include "hardware/clocks.h"
 
 // Definição dos pinos dos LEDs
 #define LED_GREEN 11
@@ -49,6 +50,9 @@ int main() {
     repeating_timer_t timer;
     // Adiciona o temporizador para alterar os LEDs a cada 3000ms (3 segundos)
     add_repeating_timer_ms(3000, semaforo_callback, NULL, &timer);
+
+    // Configura o clock do sistema para operar em 100MHz
+    set_sys_clock_khz(100000, false);
 
     while (true) {
         sleep_ms(3000); // Espera 3 segundos para indicar a cor no terminal
